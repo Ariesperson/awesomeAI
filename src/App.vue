@@ -1,17 +1,18 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+// import { useTheme } from './hooks/useTheme'
+// const { themeStyle } = useTheme()
+// console.log(themeStyle);
 </script>
 
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
+  <!-- <a-config-provider :theme="{
+    algorithm:theme.darkAlgorithm
+  }"> -->
+    <!-- <app /> -->
+    <div>
+      11111
+    </div>
+  <!-- </a-config-provider> -->
 </template>
 
 <style scoped>
