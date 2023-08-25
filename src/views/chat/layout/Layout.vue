@@ -1,18 +1,40 @@
 <script setup lang="ts">
-console.log("layout index")
-
-// import { computed } from 'vue'
+import { computed } from 'vue'
 // import { NLayout, NLayoutContent } from 'naive-ui'
+import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useRouter } from 'vue-router'
 import Sider from './sider/index.vue'
 const router = useRouter()
 // router.replace({ name: 'Chat', params: { uuid: chatStore.active } })
 router.replace({ name: 'Chat' })
+
+const { isMobile } = useBasicLayout()
+const getMobileClass = computed(() => {
+    debugger;
+  if (isMobile.value)
+  return ['rounded-none', 'shadow-none']
+  return ['border', 'rounded-md', 'shadow-md', 'dark:border-neutral-800']
+})
+const getContainerClass = computed(() => {
+  return [
+    // 'h-full',
+    // { 'pl-[260px]': !isMobile.value && !collapsed.value },
+  ]
+})
 </script>
 
 <template>
-    <div>
-        <Sider />
+    <div class="h-full dark:bg-[#24272e] transition-all" :class="[isMobile ? 'p-0' : 'p-4']">
+        <div class="h-full overflow-hidden" :class="getMobileClass" >
+            <a-layout class="z-40 transition" :class="getContainerClass">
+                <Sider />
+                <a-layout-content>
+                    <!-- <RouterView v-slot="{ Component, route }">
+                        <component :is="Component" :key="route.fullPath" />
+                    </RouterView> -->
+                </a-layout-content>
+            </a-layout>
+        </div>
     </div>
 </template>
 
