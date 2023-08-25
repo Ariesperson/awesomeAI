@@ -1,7 +1,14 @@
 {
   "compilerOptions": {
+    // 添加额外的路径映射，以支持导入非源码文件
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "baseUrl": ".",
+    // 指定 es 模块的目标版本，可以是 es3、es5、es2015、es2016、es2017、es2018、es2019 或 es2020
     "target": "ES2020",
     "useDefineForClassFields": true,
+    // 以.ts 为后缀名的文件会被视为模块
     "module": "ESNext",
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
@@ -20,6 +27,8 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
+    // 排除 node_modules 及其子目录和 dist 目录
+  "exclude": ["node_modules", "dist", "service"],
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
