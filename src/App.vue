@@ -10,7 +10,7 @@
   }"> -->
     <!-- <app /> -->
     <div>
-      11111
+      <RouterView />
     </div>
   <!-- </a-config-provider> -->
 </template>
