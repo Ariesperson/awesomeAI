@@ -4,21 +4,25 @@ import { computed } from 'vue'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useRouter } from 'vue-router'
 import Sider from './sider/index.vue'
+import { useAppStore } from '@/store'
+
 const router = useRouter()
+const appStore = useAppStore()
 // router.replace({ name: 'Chat', params: { uuid: chatStore.active } })
 router.replace({ name: 'Chat' })
 
 const { isMobile } = useBasicLayout()
+const collapsed = computed(() => appStore.siderCollapsed)
+debugger;
 const getMobileClass = computed(() => {
-    debugger;
   if (isMobile.value)
   return ['rounded-none', 'shadow-none']
   return ['border', 'rounded-md', 'shadow-md', 'dark:border-neutral-800']
 })
 const getContainerClass = computed(() => {
-  return [
-    // 'h-full',
-    // { 'pl-[260px]': !isMobile.value && !collapsed.value },
+    return [
+    'h-full',
+    { 'pl-[260px]': !isMobile.value && !collapsed.value },
   ]
 })
 </script>
@@ -29,9 +33,9 @@ const getContainerClass = computed(() => {
             <a-layout class="z-40 transition" :class="getContainerClass">
                 <Sider />
                 <a-layout-content>
-                    <!-- <RouterView v-slot="{ Component, route }">
+                    <RouterView v-slot="{ Component, route }">
                         <component :is="Component" :key="route.fullPath" />
-                    </RouterView> -->
+                    </RouterView>
                 </a-layout-content>
             </a-layout>
         </div>
