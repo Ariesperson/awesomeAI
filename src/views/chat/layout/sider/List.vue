@@ -5,20 +5,18 @@ import { useAppStore, useChatStore } from '@/store'
 import { SvgIcon } from '@/components/common'
 import { debounce } from '@/utils/functions/debounce'
 
-const { isMobile } = useBasicLayout()
-
 // 获取全局状态
+const { isMobile } = useBasicLayout()
 const appStore = useAppStore()
 const chatStore = useChatStore()
-//  计算属性
+// 计算属性
 const dataSources = computed(() => chatStore.history)
 
 const isActive = (uuid: number) => {
   return chatStore.active === uuid
 }
-
+//处理选择对话
 const handleSelect = async ({ uuid }: Chat.History) => {
-
     //判断是否是正在活跃的历史对话
     if (isActive(uuid))
     return
@@ -34,22 +32,27 @@ const handleSelect = async ({ uuid }: Chat.History) => {
     appStore.setSiderCollapsed(true)
 
 }
+//处理输入的时候同步更新
 const handleEnter = ({ uuid }: Chat.History, isEdit: boolean, event: KeyboardEvent) => {
-
+  event?.stopPropagation()
+  if (event.key === 'Enter')
+    chatStore.updateHistory(uuid, { isEdit })
 }
+//编辑会话名称
 const handleEdit = ({ uuid }: Chat.History, isEdit: boolean, event?: MouseEvent) => {
-
+    event?.stopPropagation()
+    chatStore.updateHistory(uuid, { isEdit })
 }
 //删除会话
 const handleDelete = (index: number, event?: MouseEvent | TouchEvent) => {
-
+    event?.stopPropagation()
+    chatStore.deleteHistory(index)
+    if (isMobile.value)
+    appStore.setSiderCollapsed(true)
 }
-//防抖
+//删除防抖
 const handleDeleteDebounce = debounce(handleDelete, 600)
 
-const cancel = (e: MouseEvent) => {
-  console.log(e);
-};
 </script>
 <template>
     <div class="px-4">
@@ -88,7 +91,7 @@ const cancel = (e: MouseEvent) => {
                                     cancel-text="No"
                                     @confirm="handleDeleteDebounce(index, $event)">
                                     <button class="p-1">
-                                        <SvgIcon icon="ri:delete-bin-line" @click="handleEdit(item, true, $event)" />
+                                        <SvgIcon icon="ri:delete-bin-line" />
                                     </button>
                                 </a-popconfirm>
                             </template>
