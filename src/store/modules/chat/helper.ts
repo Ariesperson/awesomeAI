@@ -1,4 +1,4 @@
-import { ss } from '../../../utils/storage'
+import { ss } from '@/utils/storage'
 const LOCAL_NAME = 'AIStorage'
 
 // 返回一个对象，其中包含当前活动的对话框 ID、是否正在使用上下文、历史对话列表和聊天记录
@@ -16,12 +16,7 @@ export function getLocalState(): Chat.ChatState {
     // 获取存储中的值
     const localState = ss.get(LOCAL_NAME);
 
-    // 如果没有找到值，则返回默认状态
-    if (!localState) {
-        return defaultState();
-    }
-
-    // 否则返回找到的值
+    // 没找到则返回默认的值
     return { ...defaultState(), ...localState };
 }
 
