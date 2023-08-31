@@ -42,7 +42,7 @@ const getMobileClass = computed<CSSProperties>(() => {
 </script>
 
 <template>
-    <a-layout-sider style="height: 100vh;" :collapsed="collapsed" :style="getMobileClass" :width="260" :trigger="isMobile ? false : 'arrow-circle'">
+    <a-layout-sider style="background-color: antiquewhite;"  :collapsed="collapsed" :style="getMobileClass" :width="260" :trigger="isMobile ? false : 'arrow-circle'">
       <div class="flex flex-col h-full" :style="mobileSafeArea">
         <main class="flex flex-col flex-1 min-h-0">
           <div class="p-4">

@@ -13,7 +13,6 @@ router.replace({ name: 'Chat' })
 
 const { isMobile } = useBasicLayout()
 const collapsed = computed(() => appStore.siderCollapsed)
-debugger;
 const getMobileClass = computed(() => {
   if (isMobile.value)
   return ['rounded-none', 'shadow-none']
@@ -22,7 +21,7 @@ const getMobileClass = computed(() => {
 const getContainerClass = computed(() => {
     return [
     'h-full',
-    { 'pl-[260px]': !isMobile.value && !collapsed.value },
+    // { 'pl-[260px]': !isMobile.value && !collapsed.value },
   ]
 })
 </script>
