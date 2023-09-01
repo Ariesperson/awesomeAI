@@ -5,6 +5,7 @@ import { useAppStore,useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 // 组件
 import List from './List.vue'
+import Footer from "./Footer.vue";
 
 const appStore = useAppStore()
 const chatStore = useChatStore()
@@ -60,7 +61,7 @@ const getMobileClass = computed<CSSProperties>(() => {
               </a-button>
           </div>
         </main>
-        <!-- <Footer /> -->
+        <Footer/>
       </div>
     </a-layout-sider>
 </template>

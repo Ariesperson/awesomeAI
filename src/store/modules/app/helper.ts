@@ -1,4 +1,4 @@
-import { ss } from '../../../utils/storage'
+import { ss } from '@/utils/storage'
 // 定义本地存储的键名
 const LOCAL_NAME = 'appSetting'
 
