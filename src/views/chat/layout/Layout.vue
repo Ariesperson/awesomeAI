@@ -4,15 +4,16 @@ import { computed } from 'vue'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useRouter } from 'vue-router'
 import Sider from './sider/index.vue'
-import { useAppStore } from '@/store'
+import { useAppStore,useChatStore } from '@/store'
 
 const router = useRouter()
 const appStore = useAppStore()
-// router.replace({ name: 'Chat', params: { uuid: chatStore.active } })
-router.replace({ name: 'Chat' })
+const chatStore = useChatStore()
+router.replace({ name: 'Chat', params: { uuid: chatStore.active } })
 
 const { isMobile } = useBasicLayout()
 const collapsed = computed(() => appStore.siderCollapsed)
+
 const getMobileClass = computed(() => {
   if (isMobile.value)
   return ['rounded-none', 'shadow-none']
