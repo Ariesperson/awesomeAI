@@ -29,14 +29,14 @@ const getContainerClass = computed(() => {
 
 <template>
     <div class="h-full dark:bg-[#24272e] transition-all" :class="[isMobile ? 'p-0' : 'p-4']">
-        <div class="h-full overflow-hidden" :class="getMobileClass" >
+        <div class="h-full overflow-hidden w-full" :class="getMobileClass" >
             <a-layout class="z-40 transition" :class="getContainerClass">
                 <Sider />
-                <a-layout-content>
                     <RouterView v-slot="{ Component, route }">
-                        <component :is="Component" :key="route.fullPath" />
+                        <a-layout-content style="width: 1000px;" class="h-full w-full">
+                            <component :is="Component" :key="route.fullPath" />
+                        </a-layout-content>
                     </RouterView>
-                </a-layout-content>
             </a-layout>
         </div>
     </div>
