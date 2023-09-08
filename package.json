@@ -9,13 +9,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@traptitech/markdown-it-katex": "^3.6.0",
     "@iconify/vue": "^4.1.1",
     "@vueuse/core": "^10.3.0",
     "ant-design-vue": "^4.0.1",
     "autoprefixer": "^10.4.15",
+    "markdown-it": "^13.0.1",
     "pinia": "^2.1.6",
     "postcss": "^8.4.28",
     "tailwindcss": "^3.3.3",
+    "highlight.js": "^11.7.0",
     "vue": "^3.3.4",
     "vue-i18n": "^9.2.2",
     "vue-router": "^4.2.4"
@@ -26,6 +29,9 @@
     "less": "^4.2.0",
     "typescript": "^5.0.2",
     "vite": "^4.4.5",
-    "vue-tsc": "^1.8.5"
+    "vue-tsc": "^1.8.5",
+    "@types/markdown-it": "^12.2.3",
+    "@types/markdown-it-link-attributes": "^3.0.1",
+    "markdown-it-link-attributes": "^4.0.1"
   }
 }
