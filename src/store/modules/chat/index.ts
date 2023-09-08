@@ -103,7 +103,9 @@ export const useChatStore = defineStore('chat-store', {
     },
 
     addChatByUuid(uuid: number, chat: Chat.Chat) {
+      // 在未指定 uuid 的情况下 则系统将生成一个新的 uuid，并将该会话设置为激活状态。
       if (!uuid || uuid === 0) {
+         // 如果用户还没有创建任何会话
         if (this.history.length === 0) {
           const uuid = Date.now()
           this.history.push({ uuid, title: chat.text, isEdit: false })
@@ -111,6 +113,7 @@ export const useChatStore = defineStore('chat-store', {
           this.active = uuid
           this.recordState()
         }
+        // 如果用户创建了会话，将新消息添加到当前会话中。
         else {
           this.chat[0].data.push(chat)
           if (this.history[0].title === 'New Chat')
@@ -118,7 +121,8 @@ export const useChatStore = defineStore('chat-store', {
           this.recordState()
         }
       }
-
+      // 则将新会话添加到 history 中并将其设置为激活状态。否则，将新消息添加到当前会话中。
+      // 在已指定 uuid 的情况下，通过找到与该 uuid 匹配的会话，然后将新消息添加到该会话中
       const index = this.chat.findIndex(item => item.uuid === uuid)
       if (index !== -1) {
         this.chat[index].data.push(chat)
@@ -139,6 +143,7 @@ export const useChatStore = defineStore('chat-store', {
 
       const chatIndex = this.chat.findIndex(item => item.uuid === uuid)
       if (chatIndex !== -1) {
+        //直接替换对象
         this.chat[chatIndex].data[index] = chat
         this.recordState()
       }
@@ -152,9 +157,10 @@ export const useChatStore = defineStore('chat-store', {
         }
         return
       }
-
+      // 找到对应的uuid的chat 进行更新
       const chatIndex = this.chat.findIndex(item => item.uuid === uuid)
       if (chatIndex !== -1) {
+        //覆盖更新部分数据
         this.chat[chatIndex].data[index] = { ...this.chat[chatIndex].data[index], ...chat }
         this.recordState()
       }
