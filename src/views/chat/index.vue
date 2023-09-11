@@ -8,7 +8,13 @@ import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
 import { useUsingContext } from './hooks/useUsingContext'
 import { HoverButton,SvgIcon } from '@/components/common'
+import { t } from '@/locales'
+import { fetchChatAPIProcess } from '@/api'
 import { storeToRefs } from 'pinia'
+
+let controller = new AbortController()
+
+const openLongReply = import.meta.env.VITE_GLOB_OPEN_LONG_REPLY === 'true'
 
 const { isMobile } = useBasicLayout()
 //定义滚动区域
@@ -81,7 +87,7 @@ const onConversation = async () => {
     // 如果拿到了上下文
     if (lastContext && usingContext.value)
     options = { ...lastContext }
-
+    // 拿到上下文之后添加chat对话记录
     addChat(
     +uuid,
         {
@@ -94,20 +100,81 @@ const onConversation = async () => {
         requestOptions: { prompt: message, options: { ...options } },
         },
     )
+    //滚动到底部
     scrollToBottom()
-    //准备工作就绪，接下来要请求AI的接口返回数据
+    //准备工作就绪，接下来要请求AI的接口返回对话数据
     let lastText = ''
     try {
         const fetchChatAPIOnce = async () => {
+            // return '我是您的AI小助手'
+            // await fetchChatAPIProcess<Chat.ConversationResponse>({
+            //     prompt: message,
+            //     options,
+            //     signal: controller.signal,
+            //     onDownloadProgress: ({ event }) => {
+            //         const xhr = event.target
+            //         const { responseText } = xhr
+            //         // Always process the final line
+            //         const lastIndex = responseText.lastIndexOf('\n', responseText.length - 2)
+            //         let chunk = responseText
+            //         if (lastIndex !== -1)
+            //             chunk = responseText.substring(lastIndex)
+       
+            //     },
+            // })
+            try {
+              
+                // const data = JSON.parse(chunk)
+                let data = {
+                    text:'我是您的AI小助手',
+                    conversationId:'1',
+                    parentMessageId:'1',
+                    id:'1'
+                }
+                updateChat(
+                    +uuid,
+                    dataSources.value.length - 1,
+                    {
+                        dateTime: new Date().toLocaleString(),
+                        text: lastText + (data.text ?? ''),
+                        inversion: false,
+                        error: false,
+                        loading: true,
+                        conversationOptions: { conversationId: data.conversationId, parentMessageId: data.id },
+                        requestOptions: { prompt: message, options: { ...options } },
+                    },
+                )
+                if (openLongReply && data.detail.choices[0].finish_reason === 'length') {
 
+                    options.parentMessageId = data.id
+                    lastText = data.text
+                    message = ''
+                    return fetchChatAPIOnce()
+                    
+                }
+                scrollToBottomIfAtBottom()
+            }
+            catch (error) {
+                //
+            }
+            updateChatSome(+uuid, dataSources.value.length - 1, { loading: false })
         }
-        await fetchChatAPIOnce()
+        fetchChatAPIOnce()
     } catch (error) {
         console.log(error)
     }
 
 }
 
+//清除对话记录
+const handleClear = () => {
+    console.log("清除对话记录")
+}
+
+//处理下载为图片
+const handleExport = () => {
+    console.log("导出为图片")
+}
 
 // footer class
 const footerClass = computed(() => {
@@ -116,24 +183,46 @@ const footerClass = computed(() => {
     classes = ['sticky', 'left-0', 'bottom-0', 'right-0', 'p-2', 'pr-3', 'overflow-hidden']
   return classes
 })
-
+// 定义placeholder
+const placeholder = computed(() => {
+  if (isMobile.value)
+    return t('chat.placeholderMobile')
+  return t('chat.placeholder')
+})
 
 // 可优化部分
 // 搜索选项计算，这里使用value作为索引项，所以当出现重复value时渲染异常(多项同时出现选中效果)
 // 理想状态下其实应该是key作为索引项,但官方的renderOption会出现问题，所以就需要value反renderLabel实现
-const searchOptions = computed(() => {
-  if (prompt.value.startsWith('/')) {
-    return promptTemplate.value.filter((item: { key: string }) => item.key.toLowerCase().includes(prompt.value.substring(1).toLowerCase())).map((obj: { value: any }) => {
-      return {
-        label: obj.value,
-        value: obj.value,
-      }
-    })
+// const searchOptions = computed(() => {
+//   if (prompt.value.startsWith('/')) {
+//     return promptTemplate.value.filter((item: { key: string }) => item.key.toLowerCase().includes(prompt.value.substring(1).toLowerCase())).map((obj: { value: any }) => {
+//       return {
+//         label: obj.value,
+//         value: obj.value,
+//       }
+//     })
+//   }
+//   else {
+//     return []
+//   }
+// })
+
+//定义回车键确认时间
+const handleEnter = (event: KeyboardEvent) => {
+    debugger;
+    if (!isMobile.value) {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault()
+      handleSubmit()
+    }
   }
   else {
-    return []
+    if (event.key === 'Enter' && event.ctrlKey) {
+      event.preventDefault()
+      handleSubmit()
+    }
   }
-})
+}
 </script>
 
 <template>
@@ -183,13 +272,17 @@ const searchOptions = computed(() => {
                         <SvgIcon icon="ri:chat-history-line" />
                         </span>
                     </HoverButton>
-                    <a-auto-complete class="flex-grow" v-model:value="prompt" :options="searchOptions" :render-label="renderOption">
+                    <a-auto-complete class="flex-grow" v-model:value="prompt" >
+                        <template #default>
                         <a-input
                             ref="inputRef"
                             v-model:value="prompt"
+                            :placeholder="placeholder"
                             :auto-size="{ minRows: 1, maxRows: isMobile ? 4 : 8 }"
                             type="textarea"
+                            @pressEnter="handleEnter"
                         />
+                        </template>
                     </a-auto-complete>
                     <a-button type="primary"  @click="handleSubmit">
                         <template #icon>
