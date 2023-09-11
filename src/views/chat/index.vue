@@ -183,10 +183,11 @@ const searchOptions = computed(() => {
                         <SvgIcon icon="ri:chat-history-line" />
                         </span>
                     </HoverButton>
-                    <a-auto-complete v-model:value="prompt" :options="searchOptions" :render-label="renderOption">
+                    <a-auto-complete class="flex-grow" v-model:value="prompt" :options="searchOptions" :render-label="renderOption">
                         <a-input
                             ref="inputRef"
                             v-model:value="prompt"
+                            :auto-size="{ minRows: 1, maxRows: isMobile ? 4 : 8 }"
                             type="textarea"
                         />
                     </a-auto-complete>
